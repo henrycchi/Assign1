@@ -7,5 +7,4 @@ before_install:
 compiler: gcc
 
 script: 
-    - make
     - make test
