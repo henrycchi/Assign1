@@ -7,9 +7,6 @@ get-deps:
 dictionary.o: dictionary.c
 	gcc -Wall -c dictionary.c dictionary.h
 
-spell: main.o dictionary.o spell.o
-	gcc -g -fprofile-arcs -ftest-coverage -Wall -o spell main.o dictionary.o spell.o
-
 spell.o: spell.c
 	gcc -Wall -c spell.c
 
@@ -32,9 +29,5 @@ clean:
 cleanall:clean
 	rm spell_check
 	
-all: clean test spell
-
-fuzzyspell: 
-	afl-gcc -o fuzzmain main.c spell.c dictionary.c dictionary.h
 
 
