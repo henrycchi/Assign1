@@ -46,7 +46,7 @@ function load_dictionary(string dictionary, hashmap hashtable[])
 
 bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[]){   
 	FILE *dict_file = fopen(dictionary_file, "r");
-	if (!dict_file) {
+	if (dict_file == NULL) {
 		return false;
 	}
 	else {
@@ -160,26 +160,46 @@ fuction check_word(string word, hashmap hashtable[])
 }
 */
 bool check_word(const char* word, hashmap_t hashtable[])
-{
-	char LowerWord[strlen(word)]; 
-	sprintf(LowerWord, "%s", word); //Stored as a string in the buffer 
-	Lowercase(LowerWord);
-	int bucket = hash_function(LowerWord);
-	hashmap_t temp = hashtable[bucket];
-	if (temp == NULL)  {
-		return false; // NO MATCH
-	}
-	bool Returned = false;
-	hashmap_t cursor = temp;
-	while (cursor->next != NULL) {
-		if (strncmp(LowerWord, cursor->word, strlen(cursor->word)) == 0) {
-			Returned = true;
-			break;
-	        } 
-		else {
-			Returned = false;		
-		}
-		cursor = cursor->next;
-	}
-	return Returned;
+{ int WordLength = strlen(word);
+    if (WordLength > LENGTH){
+    	return 0;
+    }
+    int numeric = 1;
+    for (int i = 0; i < WordLength; i++){
+        if (!isdigit(word[i])){
+            numeric = 0;
+        }
+    }
+    if (numeric == 1){
+        return 1;
+    }
+    int ascii = 1;
+    for (int i = 0; i < WordLength; i++){
+        if (isascii(word[i]) == 0){
+            ascii = 0;
+        }
+    }
+    if (ascii == 0){
+        return 0;
+    }
+    int bucket = hash_function(word);
+    hashmap_t cursor = hashtable[bucket];
+        if (strcmp(word, cursor->word) == 0) {
+            return 1;
+        }
+        else {
+            char word_lower[LENGTH+1];
+            for (int i=0; i <= strlen(word); i++) {
+                word_lower[i] = tolower(word[i]);
+            }
+            int bucket2 = hash_function(word_lower);
+            hashmap_t cursor2 = hashtable[bucket2];
+            while(cursor2 != NULL) { 
+                if (strcmp(word_lower, cursor2->word) == 0) {
+	                return 1;
+                }
+                cursor2 = cursor2->next;
+            }
+        }
+    return 0;
 }
